@@ -13,6 +13,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".SettingsActivity" android:exported="false" />
+        <activity android:name=".EmojiPickerActivity" android:exported="false" />
         <service android:name=".SikBoardIME" android:label="SikBoard"
             android:permission="android.permission.BIND_INPUT_METHOD" android:exported="true">
             <intent-filter><action android:name="android.view.InputMethod"/></intent-filter>
