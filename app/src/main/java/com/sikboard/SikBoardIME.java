@@ -78,19 +78,8 @@ public class SikBoardIME extends InputMethodService {
 
     private void pickEmojiImage(){
         Intent i=new Intent(Intent.ACTION_OPEN_DOCUMENT);i.setType("image/*");i.addCategory(Intent.CATEGORY_OPENABLE);i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
-        startActivityForResult(i,901);
+        i.setClass(this, EmojiPickerActivity.class); i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); startActivity(i);
     }
-    @Override public void onActivityResult(int request,int result,Intent data){
-        super.onActivityResult(request,result,data);
-        if(request==901 && result==Activity.RESULT_OK && data!=null && data.getData()!=null){
-            Uri u=data.getData();try{getContentResolver().takePersistableUriPermission(u,Intent.FLAG_GRANT_READ_URI_PERMISSION);}catch(Exception ignored){}
-            String id="sikemoji:custom_"+UUID.randomUUID().toString();
-            new SikEmojiStore(this).save(new SikEmoji(id,"Custom Emoji",SikEmoji.Type.IMAGE,u));
-            mode="CUSTOM";rebuild();
-            Toast.makeText(this,"Özel emoji eklendi.",Toast.LENGTH_SHORT).show();
-        }
-    }
-
     private void sendCustomImage(String id,Uri uri){
         InputConnection ic=getCurrentInputConnection();if(ic==null)return;
         try{
