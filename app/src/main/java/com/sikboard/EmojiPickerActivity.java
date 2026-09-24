@@ -22,10 +22,8 @@ public class EmojiPickerActivity extends Activity {
         if (request == PICK && result == RESULT_OK && data != null && data.getData() != null) {
             Uri u = data.getData();
             try { getContentResolver().takePersistableUriPermission(u, Intent.FLAG_GRANT_READ_URI_PERMISSION); } catch (Exception ignored) {}
-            Intent out = new Intent(this, SikBoardIME.class);
-            out.setAction("sikboard.ADD_EMOJI");
-            out.putExtra("uri", u.toString());
-            sendBroadcast(out);
+            getSharedPreferences("sikemoji_store", MODE_PRIVATE).edit()
+                    .putString("pending_uri", u.toString()).apply();
         }
         finish();
     }
