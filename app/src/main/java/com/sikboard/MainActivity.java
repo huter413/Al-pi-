@@ -1,3 +1,38 @@
 package com.sikboard;
-import android.app.Activity; import android.os.Bundle; import android.view.inputmethod.InputMethodManager; import android.content.Context; import android.widget.*;
-public class MainActivity extends Activity { public void onCreate(Bundle b){super.onCreate(b); LinearLayout l=new LinearLayout(this); l.setOrientation(LinearLayout.VERTICAL); TextView t=new TextView(this); t.setText("SikBoard\n\nAyarlar > Sistem > Klavye bölümünden SikBoard'u etkinleştir."); t.setTextSize(20); t.setPadding(32,48,32,32); Button e=new Button(this); e.setText("Klavye ayarlarını aç"); e.setOnClickListener(v->{((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).showInputMethodPicker();}); l.addView(t); l.addView(e); setContentView(l); } }
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.content.Intent;
+import android.provider.Settings;
+import android.widget.*;
+
+public class MainActivity extends Activity {
+    @Override
+    public void onCreate(Bundle b) {
+        super.onCreate(b);
+
+        LinearLayout l = new LinearLayout(this);
+        l.setOrientation(LinearLayout.VERTICAL);
+
+        TextView t = new TextView(this);
+        t.setText("SikBoard\n\nKlavye değiştirme ve ekran klavyesi ayarlarını aç.");
+        t.setTextSize(20);
+        t.setPadding(32, 48, 32, 32);
+        l.addView(t);
+
+        Button e = new Button(this);
+        e.setText("Ayarlar > Klavye ayarlarını aç");
+        e.setOnClickListener(v -> openKeyboardSettings());
+        l.addView(e);
+
+        setContentView(l);
+    }
+
+    private void openKeyboardSettings() {
+        try {
+            startActivity(new Intent(Settings.ACTION_INPUT_METHOD_SETTINGS));
+        } catch (Exception ignored) {
+            startActivity(new Intent(Settings.ACTION_SETTINGS));
+        }
+    }
+}
