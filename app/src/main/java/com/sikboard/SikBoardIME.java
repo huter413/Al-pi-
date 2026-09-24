@@ -25,6 +25,20 @@ public class SikBoardIME extends InputMethodService {
     private int dp(int v){return (int)(v*getResources().getDisplayMetrics().density+0.5f);}
     private int h(){return dp((int)(58*scale));}
 
+    @Override public void onStartInput(EditorInfo attribute, boolean restarting){
+        super.onStartInput(attribute, restarting);
+        String pending=getSharedPreferences("sikemoji_store",MODE_PRIVATE).getString("pending_uri",null);
+        if(pending!=null){
+            Uri u=Uri.parse(pending);
+            try{getContentResolver().takePersistableUriPermission(u,Intent.FLAG_GRANT_READ_URI_PERMISSION);}catch(Exception ignored){}
+            String id="sikemoji:custom_"+UUID.randomUUID().toString();
+            new SikEmojiStore(this).save(new SikEmoji(id,"Custom Emoji",SikEmoji.Type.IMAGE,u));
+            getSharedPreferences("sikemoji_store",MODE_PRIVATE).edit().remove("pending_uri").apply();
+            mode="CUSTOM";
+            if(grid!=null) rebuild();
+        }
+    }
+
     @Override public View onCreateInputView(){
         SharedPreferences p=getSharedPreferences("sikboard",MODE_PRIVATE);
         scale=Math.max(.7f,Math.min(1.5f,p.getInt("key_size",70)/70f));
